@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_USE_VERTEX": "1",
+    "CLOUD_ML_REGION": "eu"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(make test *)",
+      "Bash(make lint *)",
+      "Bash(make policy *)",
+      "Bash(make plan ENV=staging *)",
+      "Bash(npm run test *)",
+      "Bash(terraform fmt *)",
+      "Bash(terraform validate *)",
+      "Bash(conftest test *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git switch -c session/*)",
+      "Bash(git worktree *)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(gh pr create *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/*.tfvars)",
+      "Read(./secrets/**)",
+      "Bash(terraform apply *)",
+      "Bash(terraform destroy *)",
+      "Bash(gh pr merge *)",
+      "Bash(git push --force *)",
+      "Bash(curl *)",
+      "Bash(wget *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard-bash.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/audit-log.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,8 +1,8 @@
-# 00 · How to Read This Repository
+# 00 · Approach and Conventions
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](disclaimer.md)
 
-## The one idea that ties everything together: the management spectrum
+## The organising principle: the management spectrum
 
 Every cloud service sits somewhere on a line between **"Google runs it all"** and **"you run it all"**. Where you sit decides your operational load, your share of compliance work, your cost profile and your exit options.
 
@@ -54,9 +54,9 @@ flowchart TB
 
 ## How each case study is structured
 
-Every case study in [`docs/case-studies/`](case-studies/) has the same sections, so you can compare them side by side:
+Every case study ([Case 1](case-studies/01-fully-managed.md) to [Case 5](case-studies/05-canada-pipeda.md)) uses the same structure, so the designs can be compared side by side:
 
-1. **The story**: who decided what, and why
+1. **Context**: who decided what, and why
 2. **Architecture diagram** (Mermaid)
 3. **Request flow**: a sequence diagram of one payment being scored
 4. **Service-by-service walkthrough**
@@ -66,13 +66,16 @@ Every case study in [`docs/case-studies/`](case-studies/) has the same sections,
 8. **What can go wrong** (failure modes and anti-patterns)
 9. **Key takeaways**
 
-## Prerequisites
+<details markdown>
+<summary><strong>Reader's guide</strong>: background and tooling</summary>
 
-| To read | To implement later |
+| Background that helps | Tooling to deploy the IaC |
 |---|---|
-| Basic cloud concepts (VPC, IAM, regions) | A GCP organisation (a free Cloud Identity is enough for a sandbox) |
-| A rough idea of what GDPR is | Terraform ≥ 1.9 or OpenTofu ≥ 1.8 |
-| No coding required | `gcloud` CLI, a billing account, and optionally Conftest for policy tests |
+| Cloud fundamentals (VPC, IAM, regions) | A GCP organisation (Cloud Identity is enough for a sandbox) |
+| Working knowledge of GDPR | Terraform ≥ 1.9 or OpenTofu ≥ 1.8 |
+| No coding needed to read the architecture chapters | `gcloud` CLI, a billing account, and optionally Conftest for policy tests |
+
+</details>
 
 ## Conventions
 

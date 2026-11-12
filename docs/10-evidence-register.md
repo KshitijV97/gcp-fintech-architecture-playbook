@@ -1,8 +1,8 @@
 # 10 · Evidence Register: GDPR, PIPEDA, DORA, OSFI
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](disclaimer.md)
 
-> **Story hook:** The auditors arrive on Monday. In the past, Aldervane needed six weeks of screenshots. This year the platform team runs one script, hands over a hash-sealed evidence pack, and spends the audit answering questions instead of hunting for proof.
+> **Scenario:** The auditors arrive on Monday. In the past, Aldervane needed six weeks of screenshots. This year the platform team runs one script, hands over a hash-sealed evidence pack, and spends the audit answering questions instead of hunting for proof.
 
 Every control has three things: an **implementation** (code), an **evidence artifact** (proof), and a **collection method** (how the proof is produced, ideally automatically).
 
@@ -27,7 +27,7 @@ flowchart LR
 
 ## 2. The register
 
-Legend: **G** = GDPR, **P** = PIPEDA, **D** = DORA, **O** = OSFI B-10/B-13, **Q** = Quebec Law 25. `EV-` IDs match the files produced by [`evidence/collect-evidence.sh`](../evidence/collect-evidence.sh).
+Legend: **G** = GDPR, **P** = PIPEDA, **D** = DORA, **O** = OSFI B-10/B-13, **Q** = Quebec Law 25. `EV-` IDs match the files produced by [`evidence/collect-evidence.sh`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/evidence/collect-evidence.sh).
 
 | Control | Regulations | Implementation | Evidence ID / artifact | Collection |
 |---|---|---|---|---|
@@ -54,7 +54,7 @@ Legend: **G** = GDPR, **P** = PIPEDA, **D** = DORA, **O** = OSFI B-10/B-13, **Q*
 
 ## 3. Operating evidence: Log Analytics queries
 
-The audit log bucket has **Log Analytics** enabled ([`modules/audit-logging`](../iac/enterprise/modules/audit-logging/main.tf)), so evidence can be pulled with SQL. Replace the view path with your bucket's linked dataset or `PROJECT.LOCATION.BUCKET._AllLogs`.
+The audit log bucket has **Log Analytics** enabled ([`modules/audit-logging`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/audit-logging/main.tf)), so evidence can be pulled with SQL. Replace the view path with your bucket's linked dataset or `PROJECT.LOCATION.BUCKET._AllLogs`.
 
 **Q1: Who read restricted personal-data columns in the last 90 days?** *(G 32, P 4.7)*
 
@@ -147,4 +147,4 @@ sequenceDiagram
     Aud->>Aud: shasum -c MANIFEST.sha256 → integrity verified
 ```
 
-➡️ Back to [README](../README.md) · Related: [Case 5 · Canada and PIPEDA](case-studies/05-canada-pipeda.md), [03 · Compliance controls](03-compliance-controls.md)
+➡️ Back to [README](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/README.md) · Related: [Case 5 · Canada and PIPEDA](case-studies/05-canada-pipeda.md), [03 · Compliance controls](03-compliance-controls.md)

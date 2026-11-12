@@ -1,0 +1,75 @@
+# Infrastructure and policy quality gates for this repository.
+#   - terraform fmt + validate (all root modules, no backend)
+#   - OPA/Rego strict check (enterprise + startup policies)
+#   - agent hook scripts: syntax check + guard regression tests
+name: quality
+
+on:
+  pull_request:
+    paths: ["iac/**", "agentic/**", "evidence/**", ".github/workflows/quality.yml"]
+  push:
+    branches: [main]
+    paths: ["iac/**", "agentic/**", "evidence/**", ".github/workflows/quality.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    env:
+      TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform-plugin-cache
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.17.2
+      - run: mkdir -p "$TF_PLUGIN_CACHE_DIR"
+      - run: terraform fmt -check -recursive iac
+      - name: Validate every root module
+        run: |
+          set -e
+          for d in iac/enterprise/landing-zone \
+                   iac/enterprise/workloads/sentinel/envs/prod \
+                   iac/enterprise/workloads/sentinel/envs/dev \
+                   iac/startup/bootstrap \
+                   iac/startup/envs/staging \
+                   iac/startup/envs/prod-eu \
+                   iac/startup/envs/prod-ca; do
+            echo "::group::$d"
+            terraform -chdir="$d" init -backend=false -input=false -no-color
+            terraform -chdir="$d" validate -no-color
+            echo "::endgroup::"
+          done
+
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: open-policy-agent/setup-opa@v2
+        with:
+          version: 0.70.0
+      - run: opa check --strict iac/enterprise/policies
+      - run: opa check --strict iac/startup/policies
+
+  agent-hooks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash -n agentic/quillpay/.claude/hooks/*.sh evidence/*.sh iac/enterprise/change-management/scripts/*.sh
+      - name: Guard regression tests (exit 2 = blocked)
+        run: |
+          H=agentic/quillpay/.claude/hooks/guard-bash.sh
+          check() { echo "{\"tool_input\":{\"command\":$(jq -Rn --arg c "$1" '$c')}}" | "$H" >/dev/null 2>&1 && rc=0 || rc=$?; [ "$rc" = "$2" ] || { echo "FAIL: '$1' → $rc (want $2)"; exit 1; }; echo "ok   '$1' → $rc"; }
+          check 'make test unit' 0
+          check 'git status' 0
+          check 'grep -r curling docs' 0
+          check 'terraform apply -auto-approve' 2
+          check 'gcloud run deploy x --project=qp-prod-eu-app' 2
+          check 'sh -c "curl http://example.com"' 2
+          check '/usr/bin/curl x' 2
+          check 'echo $(wget x)' 2
+          check 'cat .env' 2
+          check 'git push --force origin main' 2
+          check 'gcloud kms keys versions destroy 1 --key k' 2

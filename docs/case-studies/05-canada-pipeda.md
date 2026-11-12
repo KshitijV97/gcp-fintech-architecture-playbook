@@ -6,7 +6,7 @@
 >
 > Short answer: **no**. PIPEDA overlaps heavily with GDPR but it is **not a subset**. This chapter finds the gaps, closes them, and shows the evidence for each.
 
-> ⚖️ Educational summary, **not legal advice**. PIPEDA is the *Personal Information Protection and Electronic Documents Act* (Canada's federal private-sector privacy law). Bill C-27 (the proposed Consumer Privacy Protection Act) died when Parliament was prorogued in January 2025. Watch for a successor bill, which could change the details below.
+> ⚖️ Summary for architectural purposes, **not legal advice**. PIPEDA is the *Personal Information Protection and Electronic Documents Act* (Canada's federal private-sector privacy law). Bill C-27 (the proposed Consumer Privacy Protection Act) died when Parliament was prorogued in January 2025. Watch for a successor bill, which could change the details below.
 
 ---
 
@@ -145,14 +145,14 @@ flowchart TB
 
 | Cell | Enterprise (Aldervane) | Startup (Quillpay) |
 |---|---|---|
-| Folder + residency guardrail | `fldr-ca-prod` with `gcp.resourceLocations` = Montréal + Toronto ([landing-zone/main.tf](../../iac/enterprise/landing-zone/main.tf)) | `prod-ca` folder ([bootstrap/main.tf](../../iac/startup/bootstrap/main.tf)) |
+| Folder + residency guardrail | `fldr-ca-prod` with `gcp.resourceLocations` = Montréal + Toronto ([landing-zone/main.tf](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/landing-zone/main.tf)) | `prod-ca` folder ([bootstrap/main.tf](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/startup/bootstrap/main.tf)) |
 | Assured Workloads | `CA_REGIONS_AND_SUPPORT` (data location + support personnel) | Optional |
 | Separate keys | `kms_ca` project | `qp-prod-ca-kms` project |
-| Shift-left residency check | `RESIDENCY-CA` rule ([policies/residency.rego](../../iac/enterprise/policies/residency.rego)) | `[RESIDENCY]` rule ([policies/guardrails.rego](../../iac/startup/policies/guardrails.rego)) |
-| Platform | Sentinel workload with `jurisdiction = "ca"` | [envs/prod-ca/main.tf](../../iac/startup/envs/prod-ca/main.tf) |
-| Privacy registers | Data-governance module + registers | [modules/platform/privacy_tables.tf](../../iac/startup/modules/platform/privacy_tables.tf) |
+| Shift-left residency check | `RESIDENCY-CA` rule ([policies/residency.rego](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/policies/residency.rego)) | `[RESIDENCY]` rule ([policies/guardrails.rego](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/startup/policies/guardrails.rego)) |
+| Platform | Sentinel workload with `jurisdiction = "ca"` | [envs/prod-ca/main.tf](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/startup/envs/prod-ca/main.tf) |
+| Privacy registers | Data-governance module + registers | [modules/platform/privacy_tables.tf](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/startup/modules/platform/privacy_tables.tf) |
 | Breach records ≥ 24 months | Locked log bucket | Locked `breach-records` bucket (36 months), policy `[PIPEDA-BREACH]` |
-| Demand | [dmd-0057](../../iac/enterprise/demand-management/demands/dmd-0057-sentinel-canada.yaml) | n/a |
+| Demand | [dmd-0057](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/demand-management/demands/dmd-0057-sentinel-canada.yaml) | n/a |
 
 ## 4. Closing each gap
 
@@ -231,7 +231,7 @@ sequenceDiagram
 | Consent ledger | Life of relationship + 2 years (proof of consent) | + 7 years | Partition expiration |
 | Breach register | **24 months** (PIPEDA) | 36 months (policy) | Locked bucket |
 
-> The erasure workflow from [Chapter 02](../02-problem-statement.md#5-the-central-puzzle-erasure-vs-retention-) now checks **two** constraints: legal holds (AML) **and** the PIPEDA decision-access floor.
+> The erasure workflow from [Chapter 02](../02-problem-statement.md#5-the-central-puzzle-erasure-vs-retention) now checks **two** constraints: legal holds (AML) **and** the PIPEDA decision-access floor.
 
 ### G6: internal complaints
 
@@ -265,7 +265,7 @@ Quillpay's EU support engineers sometimes need read access to Canadian data duri
 | Transfers (OPC guidance) | Notice + PAM + contracts | IAM PAM, aspect `cross_border_transfer` | PAM grant logs; transfer agreement | Quarterly |
 | Quebec Law 25 | PIA, automated-decision notice, CAI notification | PIA-CA-2026-002 | PIA document; notice text | On change |
 
-All automatable rows are collected by [`evidence/collect-evidence.sh`](../../evidence/collect-evidence.sh). See the full cross-regime register in [Chapter 10](../10-evidence-register.md).
+All automatable rows are collected by [`evidence/collect-evidence.sh`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/evidence/collect-evidence.sh). See the full cross-regime register in [Chapter 10](../10-evidence-register.md).
 
 ## 6. Key takeaways
 

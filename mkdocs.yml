@@ -1,0 +1,139 @@
+site_name: GCP Fintech Architecture Playbook
+site_description: >-
+  Reference architectures for a regulated, real-time payment-fraud platform on
+  Google Cloud: five designs, enterprise and startup Terraform, GDPR, DORA and
+  PIPEDA control engineering.
+site_author: Kshitij Vengurlekar
+site_url: https://gcp-fintech-architecture-playbook.vercel.app/
+repo_url: https://github.com/KshitijV97/gcp-fintech-architecture-playbook
+repo_name: KshitijV97/gcp-fintech-architecture-playbook
+edit_uri: edit/main/docs/
+copyright: >-
+  © 2026 Kshitij Vengurlekar · Docs <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+  · Code MIT · <a href="/disclaimer/">Not legal or compliance advice</a>
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: en
+  icon:
+    logo: material/shield-check-outline
+    repo: fontawesome/brands/github
+  favicon: assets/favicon.svg
+  # System fonts: no runtime call to Google Fonts (a GDPR-themed site should not
+  # leak visitor IPs to third parties for typography).
+  font: false
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.tracking
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - content.tooltips
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/KshitijV97/gcp-fintech-architecture-playbook
+      name: Source on GitHub
+
+plugins:
+  - search
+
+# Mermaid is vendored (pinned, see assets/javascripts/MERMAID_VERSION) instead of
+# loaded from a CDN: no third-party requests, and identical rendering on local,
+# preview and production URLs. Material uses the global `mermaid` if present.
+extra_javascript:
+  - assets/javascripts/mermaid.min.js
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+# Quality gate: with `mkdocs build --strict` (used in CI) any broken internal
+# link or anchor fails the build, so a bad link never reaches production.
+validation:
+  omitted_files: warn
+  absolute_links: info
+  unrecognized_links: warn
+  anchors: warn
+
+nav:
+  - Home: index.md
+  - Foundations:
+      - Service catalogue: 01-gcp-service-catalog.md
+      - "Problem: Project Sentinel": 02-problem-statement.md
+      - Compliance controls map: 03-compliance-controls.md
+  - Architectures:
+      - "Case 1 · Fully managed": case-studies/01-fully-managed.md
+      - "Case 2 · Semi-managed": case-studies/02-semi-managed.md
+      - "Case 3 · Least managed": case-studies/03-least-managed.md
+      - "Case 4 · Hybrid & multi-cloud": case-studies/04-hybrid-multicloud.md
+      - "Case 5 · Canada & PIPEDA": case-studies/05-canada-pipeda.md
+      - Comparison & decision guide: 04-comparison.md
+  - Infrastructure as Code:
+      - Enterprise blueprint: iac/05-enterprise-iac.md
+      - Startup blueprint: iac/06-startup-iac.md
+      - Terraform source ↗: https://github.com/KshitijV97/gcp-fintech-architecture-playbook/tree/main/iac
+  - Engineering Operating Model:
+      - Repository strategy: engineering/11-repository-strategy.md
+      - "Quillpay: agentic SDLC": engineering/12-agentic-sdlc.md
+      - Agent platform setup: engineering/13-agent-platform.md
+      - Agent configs source ↗: https://github.com/KshitijV97/gcp-fintech-architecture-playbook/tree/main/agentic/quillpay
+  - Governance & Assurance:
+      - Data governance: 08-data-governance.md
+      - Evidence register: 10-evidence-register.md
+  - Roadmap: 07-roadmap.md
+  - Reference:
+      - Approach & conventions: 00-how-to-read.md
+      - Glossary: 99-glossary.md
+      - Disclaimer: disclaimer.md
+  - About: about.md

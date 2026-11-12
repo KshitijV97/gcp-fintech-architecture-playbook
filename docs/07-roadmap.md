@@ -1,6 +1,6 @@
 # 07 · Roadmap: Implementation Phases
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](disclaimer.md)
 
 This repository grows in phases. Each phase ends in something **deployable and demonstrable**.
 
