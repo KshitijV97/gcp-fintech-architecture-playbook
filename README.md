@@ -131,6 +131,8 @@ flowchart LR
 | Strict build (same as CI) | `mkdocs build --strict` |
 | Publish | Merge a PR to `main` |
 
+Full pipeline documentation (triggers, jobs, secrets, configuration, troubleshooting): [`.github/WEBSITE_CICD.md`](.github/WEBSITE_CICD.md).
+
 Infrastructure and policy changes are gated separately by [`.github/workflows/quality.yml`](.github/workflows/quality.yml) (Terraform fmt/validate, OPA strict check, agent-hook regression tests).
 
 ## Status
