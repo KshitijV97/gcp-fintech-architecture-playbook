@@ -31,3 +31,5 @@ site/
 
 # Agent session audit logs (local; forwarded to Cloud Logging in real use)
 **/.claude/audit/
+.vercel
+.env*
