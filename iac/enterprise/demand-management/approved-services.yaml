@@ -1,0 +1,31 @@
+# Source of truth for the org-wide gcp.restrictServiceUsage allow-list.
+# Adding a service = demand + security assessment + PR approved by cloud-security.
+services:
+  - { name: alloydb.googleapis.com,          assessment: SEC-SA-2026-007, approved: 2026-03-02 }
+  - { name: artifactregistry.googleapis.com, assessment: SEC-SA-2024-002, approved: 2024-02-11 }
+  - { name: bigquery.googleapis.com,         assessment: SEC-SA-2024-003, approved: 2024-02-11 }
+  - { name: cloudbuild.googleapis.com,       assessment: SEC-SA-2024-004, approved: 2024-02-11 }
+  - { name: cloudkms.googleapis.com,         assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: compute.googleapis.com,          assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: container.googleapis.com,        assessment: SEC-SA-2024-005, approved: 2024-02-11 }
+  - { name: dataplex.googleapis.com,         assessment: SEC-SA-2026-012, approved: 2026-05-19 }
+  - { name: datacatalog.googleapis.com,      assessment: SEC-SA-2026-012, approved: 2026-05-19 }
+  - { name: dlp.googleapis.com,              assessment: SEC-SA-2025-004, approved: 2025-01-20 }
+  - { name: dns.googleapis.com,              assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: essentialcontacts.googleapis.com, assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: iam.googleapis.com,              assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: logging.googleapis.com,          assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: managedkafka.googleapis.com,     assessment: SEC-SA-2026-008, approved: 2026-03-02 }
+  - { name: monitoring.googleapis.com,       assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: pubsub.googleapis.com,           assessment: SEC-SA-2024-006, approved: 2024-02-11 }
+  - { name: redis.googleapis.com,            assessment: SEC-SA-2025-009, approved: 2025-06-03 }
+  - { name: secretmanager.googleapis.com,    assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: servicenetworking.googleapis.com, assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: storage.googleapis.com,          assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: accesscontextmanager.googleapis.com, assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: assuredworkloads.googleapis.com, assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: billingbudgets.googleapis.com, assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: binaryauthorization.googleapis.com, assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: cloudresourcemanager.googleapis.com, assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: orgpolicy.googleapis.com, assessment: SEC-SA-2024-001, approved: 2024-02-11 }
+  - { name: serviceusage.googleapis.com, assessment: SEC-SA-2024-001, approved: 2024-02-11 }

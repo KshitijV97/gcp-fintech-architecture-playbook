@@ -1,0 +1,34 @@
+# Demand request: submit as a PR adding demands/dmd-XXXX-<slug>.yaml
+# The demand ID is assigned by Enterprise Architecture at triage.
+demand_id: dmd-XXXX
+title: ""
+status: intake            # intake | triage | assessment | arb | approved | rejected | funded | delivered
+requested_by: ""
+business_sponsor: ""
+business_case:
+  problem: ""
+  expected_benefit: ""
+  kpis: []
+jurisdictions: []         # eu | ca
+data:
+  highest_classification: ""   # public | internal | confidential | restricted
+  personal_data: false
+  special_categories: false    # GDPR Art. 9 data, or sensitive information under PIPEDA
+  data_subjects: []            # customers | employees | prospects
+  lawful_basis_or_consent: ""  # GDPR Art. 6 basis; PIPEDA consent form (express/implied) or exception
+  retention: ""
+assessments:
+  dpia_required: false          # GDPR Art. 35
+  pia_required: false           # PIPEDA / OPC guidance; Quebec Law 25 if Quebec residents
+  security_review: ""
+  dora_criticality: ""          # supports critical or important function? yes/no
+  osfi_b10_third_party: ""      # Canada: material third-party arrangement?
+cloud:
+  new_services_requested: []    # must be assessed before addition to approved-services.yaml
+  regions: []
+  estimated_monthly_cost_eur: 0
+  management_tier: ""           # managed | semi-managed | unmanaged | hybrid (see docs/04-comparison.md)
+decision:
+  arb_date: null
+  outcome: null
+  conditions: []

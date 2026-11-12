@@ -1,0 +1,25 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.tfstate.lock.info
+tfplan
+plan.json
+risk.env
+
+# Evidence packs never go to Git (they belong in the WORM bucket)
+evidence/packs/
+packs/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

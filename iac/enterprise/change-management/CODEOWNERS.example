@@ -1,0 +1,14 @@
+# Copy to .github/CODEOWNERS (or your Git server's equivalent).
+# Separation of duties: authors cannot approve their own changes, and
+# security-sensitive paths need a second, independent team.
+# Team handles below are placeholders.
+
+/iac/enterprise/landing-zone/                 @aldervane/cloud-platform @aldervane/cloud-security
+/iac/enterprise/modules/org-policies/         @aldervane/cloud-security
+/iac/enterprise/modules/cmek/                 @aldervane/crypto-office
+/iac/enterprise/modules/vpc-sc-perimeter/     @aldervane/cloud-security
+/iac/enterprise/modules/audit-logging/        @aldervane/cloud-security @aldervane/internal-audit
+/iac/enterprise/policies/                     @aldervane/cloud-security @aldervane/privacy-office
+/iac/enterprise/workloads/sentinel/           @aldervane/fraud-platform
+/iac/enterprise/demand-management/            @aldervane/enterprise-architecture
+/iac/enterprise/TECH_DEBT.md                  @aldervane/enterprise-architecture

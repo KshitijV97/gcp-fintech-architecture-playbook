@@ -1,0 +1,100 @@
+# Copy to .github/workflows/terraform.yml in the Quillpay platform repo.
+# (Kept outside .github/ here so it doesn't run in this learning repository.)
+#
+# - PR:    fmt, validate, plan, conftest for every environment; plan posted as PR comment
+# - main:  apply staging automatically; prod-eu / prod-ca need a GitHub Environment
+#          approval (2 reviewers, which gives SOC 2 / ISO 27001 change evidence)
+# - Auth:  keyless via Workload Identity Federation (no JSON keys anywhere)
+name: terraform
+
+on:
+  pull_request:
+    paths: ["iac/startup/**"]
+  push:
+    branches: [main]
+    paths: ["iac/startup/**"]
+
+permissions:
+  contents: read
+  id-token: write        # required for OIDC → Google
+  pull-requests: write   # post plan comments
+
+env:
+  TF_VERSION: 1.17.2
+  WIF_PROVIDER: ${{ vars.GCP_WIF_PROVIDER }}        # output of bootstrap
+  TF_SA: ${{ vars.GCP_TERRAFORM_SA }}               # output of bootstrap
+  # Repository variables: GCP_BILLING_ACCOUNT, GCP_FOLDER_STAGING, GCP_FOLDER_PROD_EU, GCP_FOLDER_PROD_CA
+
+jobs:
+  plan:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { env: staging, key: STAGING }
+          - { env: prod-eu, key: PROD_EU }
+          - { env: prod-ca, key: PROD_CA }
+    env:
+      TF_VAR_billing_account: ${{ vars.GCP_BILLING_ACCOUNT }}
+      TF_VAR_folder_id: ${{ vars[format('GCP_FOLDER_{0}', matrix.key)] }}
+    defaults:
+      run:
+        working-directory: iac/startup/envs/${{ matrix.env }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.TF_SA }}
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - run: terraform fmt -check -recursive ../..
+      - run: terraform init -input=false
+      - run: terraform validate
+      - run: terraform plan -input=false -out=tfplan
+      - run: terraform show -json tfplan > plan.json
+      - name: Policy check (residency, CMEK, public access, PIPEDA breach retention)
+        uses: docker://openpolicyagent/conftest:v0.56.0
+        with:
+          args: test iac/startup/envs/${{ matrix.env }}/plan.json --policy iac/startup/policies
+      - name: Comment plan
+        run: |
+          terraform show -no-color tfplan | tail -c 60000 > plan.txt
+          gh pr comment ${{ github.event.pull_request.number }} --body "### Plan: ${{ matrix.env }}
+          \`\`\`
+          $(cat plan.txt)
+          \`\`\`"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  apply:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        include:
+          - { env: staging, key: STAGING }
+          - { env: prod-eu, key: PROD_EU }
+          - { env: prod-ca, key: PROD_CA }
+    environment: ${{ matrix.env }}   # prod-* environments require reviewer approval
+    env:
+      TF_VAR_billing_account: ${{ vars.GCP_BILLING_ACCOUNT }}
+      TF_VAR_folder_id: ${{ vars[format('GCP_FOLDER_{0}', matrix.key)] }}
+    defaults:
+      run:
+        working-directory: iac/startup/envs/${{ matrix.env }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.TF_SA }}
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - run: terraform init -input=false
+      - run: terraform apply -input=false -auto-approve

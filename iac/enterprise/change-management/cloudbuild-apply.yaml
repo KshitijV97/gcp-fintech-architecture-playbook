@@ -1,0 +1,46 @@
+# Triggered on merge to main. Applies the EXACT plan that was reviewed, and only
+# when the linked ServiceNow change is approved and we are inside its window.
+options:
+  pool:
+    name: projects/adv-seed-terraform/locations/europe-west3/workerPools/private-pool
+  logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/adv-seed-terraform/secrets/servicenow-api-token/versions/latest
+      env: SNOW_TOKEN
+
+steps:
+  - id: fetch-reviewed-plan
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        gcloud storage cp gs://${_PLAN_BUCKET}/${COMMIT_SHA}/tfplan ${_TF_ROOT}/tfplan
+        gcloud storage cp gs://${_PLAN_BUCKET}/${COMMIT_SHA}/risk.env risk.env
+
+  - id: change-gate
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    secretEnv: ["SNOW_TOKEN"]
+    # Fails unless: CHG state is "Scheduled"/"Implement", now() is inside the
+    # planned window (or the change is a pre-approved Standard change), and the
+    # CHG references this commit SHA.
+    args: ["iac/enterprise/change-management/scripts/servicenow_change.sh", "verify", "${COMMIT_SHA}"]
+
+  - id: apply
+    name: hashicorp/terraform:1.17.2
+    dir: ${_TF_ROOT}
+    entrypoint: sh
+    args:
+      - -c
+      - |
+        terraform init -input=false -backend-config="bucket=${_STATE_BUCKET}" &&
+        terraform apply -input=false tfplan 2>&1 | tee /workspace/apply.log
+
+  - id: close-change
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    secretEnv: ["SNOW_TOKEN"]
+    args: ["iac/enterprise/change-management/scripts/servicenow_change.sh", "close", "${COMMIT_SHA}"]

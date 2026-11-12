@@ -1,0 +1,39 @@
+demand_id: dmd-0042
+title: "Project Sentinel: real-time payment fraud scoring (EU)"
+status: funded
+requested_by: Head of Financial Crime
+business_sponsor: Chief Risk Officer
+business_case:
+  problem: >
+    Batch fraud detection flags APP fraud the next morning. SEPA Instant settles in
+    under 10 seconds. EUR 11.4M lost in Q3.
+  expected_benefit: Reduce APP fraud losses by 60%; meet PSD2 TRA exemption thresholds.
+  kpis: ["fraud loss bps", "false positive rate", "p99 decision latency < 150 ms"]
+jurisdictions: [eu]
+data:
+  highest_classification: confidential
+  personal_data: true
+  special_categories: false
+  data_subjects: [customers]
+  lawful_basis_or_consent: >
+    GDPR Art. 6(1)(c) legal obligation (PSD2 fraud monitoring, AML) and Art. 6(1)(f)
+    legitimate interest (fraud prevention, Recital 47). LIA documented in LIA-2026-019.
+  retention: Decisions 5 years after relationship end (AMLR); features 13 months.
+assessments:
+  dpia_required: true            # DPIA-2026-031 (automated decision-making, Art. 22)
+  pia_required: false
+  security_review: SEC-RV-2026-118 (approved with conditions)
+  dora_criticality: yes          # supports critical function "payments"
+  osfi_b10_third_party: n/a
+cloud:
+  new_services_requested: [managedkafka.googleapis.com, alloydb.googleapis.com]
+  regions: [europe-west3, europe-west4]
+  estimated_monthly_cost_eur: 85000
+  management_tier: semi-managed
+decision:
+  arb_date: 2026-04-14
+  outcome: approved
+  conditions:
+    - VPC-SC perimeter dry-run for at least 4 weeks before enforcement
+    - Exit plan documented in the DORA register of information before go-live
+    - Spanner migration evaluated within 18 months (TD-019)

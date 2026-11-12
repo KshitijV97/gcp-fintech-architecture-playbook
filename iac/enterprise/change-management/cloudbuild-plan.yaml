@@ -1,0 +1,69 @@
+# Triggered on every pull request (Cloud Build trigger, private pool inside the perimeter).
+# Produces: plan, policy results, risk class, and a ServiceNow change request draft.
+#
+# Substitutions supplied by the trigger:
+#   _TF_ROOT      e.g. iac/enterprise/workloads/sentinel/envs/prod
+#   _STATE_BUCKET e.g. adv-seed-tfstate
+#   _PLAN_BUCKET  bucket where approved plans are stored, keyed by commit SHA
+options:
+  pool:
+    name: projects/adv-seed-terraform/locations/europe-west3/workerPools/private-pool
+  logging: CLOUD_LOGGING_ONLY
+
+availableSecrets:
+  secretManager:
+    - versionName: projects/adv-seed-terraform/secrets/servicenow-api-token/versions/latest
+      env: SNOW_TOKEN
+
+steps:
+  - id: fmt-validate
+    name: hashicorp/terraform:1.17.2
+    dir: ${_TF_ROOT}
+    entrypoint: sh
+    args:
+      - -c
+      - |
+        terraform fmt -check -recursive ../../.. &&
+        terraform init -input=false -backend-config="bucket=${_STATE_BUCKET}" &&
+        terraform validate
+
+  - id: tech-debt-register
+    name: bash:5.2
+    entrypoint: bash
+    args: ["iac/enterprise/change-management/scripts/check_tech_debt.sh"]
+
+  - id: plan
+    name: hashicorp/terraform:1.17.2
+    dir: ${_TF_ROOT}
+    entrypoint: sh
+    args:
+      - -c
+      - |
+        terraform plan -input=false -lock-timeout=5m -out=tfplan &&
+        terraform show -json tfplan > plan.json
+
+  - id: policy-check
+    name: openpolicyagent/conftest:v0.56.0
+    dir: ${_TF_ROOT}
+    args: ["test", "plan.json", "--policy", "/workspace/iac/enterprise/policies", "--all-namespaces"]
+
+  - id: classify-risk
+    name: ghcr.io/jqlang/jq:1.7.1
+    entrypoint: sh
+    args: ["iac/enterprise/change-management/scripts/classify_change.sh", "${_TF_ROOT}/plan.json"]
+
+  - id: store-plan
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        gcloud storage cp ${_TF_ROOT}/tfplan gs://${_PLAN_BUCKET}/${COMMIT_SHA}/tfplan
+        gcloud storage cp ${_TF_ROOT}/plan.json gs://${_PLAN_BUCKET}/${COMMIT_SHA}/plan.json
+        gcloud storage cp risk.env gs://${_PLAN_BUCKET}/${COMMIT_SHA}/risk.env
+
+  - id: servicenow-draft
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    secretEnv: ["SNOW_TOKEN"]
+    args: ["iac/enterprise/change-management/scripts/servicenow_change.sh", "draft", "${COMMIT_SHA}", "${_PR_NUMBER}"]

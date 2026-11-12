@@ -1,0 +1,42 @@
+# Copy to terraform.tfvars (git-ignored) and fill in. All values below are fake.
+org_id                    = "123456789012"
+billing_account           = "000000-AAAAAA-BBBBBB"
+seed_project_id           = "adv-seed-terraform"
+terraform_service_account = "sa-tf-landing-zone@adv-seed-terraform.iam.gserviceaccount.com"
+customer_id               = "C0abc1234"
+access_policy_id          = "987654321"
+security_contacts         = ["cloud-security@aldervane.example"]
+enable_assured_workloads  = true
+lock_audit_buckets        = false # true only in the production org, after a CAB decision
+
+approved_services = [
+  # Generated from ../demand-management/approved-services.yaml. Do not edit by hand.
+  "accesscontextmanager.googleapis.com",
+  "alloydb.googleapis.com",
+  "assuredworkloads.googleapis.com",
+  "billingbudgets.googleapis.com",
+  "binaryauthorization.googleapis.com",
+  "artifactregistry.googleapis.com",
+  "bigquery.googleapis.com",
+  "cloudbuild.googleapis.com",
+  "cloudkms.googleapis.com",
+  "cloudresourcemanager.googleapis.com",
+  "compute.googleapis.com",
+  "container.googleapis.com",
+  "dataplex.googleapis.com",
+  "datacatalog.googleapis.com",
+  "dlp.googleapis.com",
+  "dns.googleapis.com",
+  "essentialcontacts.googleapis.com",
+  "iam.googleapis.com",
+  "logging.googleapis.com",
+  "managedkafka.googleapis.com",
+  "monitoring.googleapis.com",
+  "orgpolicy.googleapis.com",
+  "pubsub.googleapis.com",
+  "redis.googleapis.com",
+  "secretmanager.googleapis.com",
+  "servicenetworking.googleapis.com",
+  "serviceusage.googleapis.com",
+  "storage.googleapis.com",
+]

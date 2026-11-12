@@ -1,0 +1,41 @@
+demand_id: dmd-0057
+title: "Sentinel Canada: fraud scoring for Aldervane Canada (PIPEDA / OSFI)"
+status: approved
+requested_by: CEO, Aldervane Canada
+business_sponsor: Chief Risk Officer, Group
+business_case:
+  problem: Aldervane Canada launches Interac e-Transfer and card products in 2027 and needs fraud scoring.
+  expected_benefit: Reuse the Sentinel platform; separate Canadian data cell.
+  kpis: ["fraud loss bps", "p99 decision latency < 150 ms"]
+jurisdictions: [ca]
+data:
+  highest_classification: confidential
+  personal_data: true
+  special_categories: false
+  data_subjects: [customers]
+  lawful_basis_or_consent: >
+    PIPEDA: express consent captured at onboarding for fraud screening as a condition
+    of service (Principle 4.3.3, reasonable and necessary for the service), plus
+    PIPEDA s.7(3)(d.1)/(d.2) for disclosures to other institutions for fraud prevention.
+    See CONSENT-CA-2026-004. Quebec residents: Law 25 PIA required.
+  retention: >
+    FINTRAC/PCMLTFA records 5 years; decision records retained long enough for the
+    individual to obtain access (Principle 4.5.2), minimum 2 years after decision.
+assessments:
+  dpia_required: false
+  pia_required: true             # PIA-CA-2026-002
+  security_review: SEC-RV-2026-201
+  dora_criticality: n/a
+  osfi_b10_third_party: yes      # Google Cloud is a material third-party arrangement
+cloud:
+  new_services_requested: []
+  regions: [northamerica-northeast1, northamerica-northeast2]
+  estimated_monthly_cost_eur: 32000
+  management_tier: semi-managed
+decision:
+  arb_date: 2026-09-22
+  outcome: approved
+  conditions:
+    - Canadian data cell isolated in fldr-ca-prod with its own KMS project and perimeter
+    - Breach record register retained 24 months minimum (PIPEDA breach regulations)
+    - Privacy Officer for Aldervane Canada named before go-live (Principle 4.1)
