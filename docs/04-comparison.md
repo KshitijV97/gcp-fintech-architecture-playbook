@@ -1,8 +1,8 @@
 # 04 · Comparison and Decision Guide
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](disclaimer.md)
 
-> **Story hook:** Aldervane's CIO and Quillpay's CTO end up on the same conference panel. The moderator asks: *"So which approach is right?"* Both answer: *"It depends."* This chapter explains what it depends on.
+> **Scenario:** Aldervane's CIO and Quillpay's CTO end up on the same conference panel. The moderator asks: *"So which approach is right?"* Both answer: *"It depends."* This chapter explains what it depends on.
 
 ## 1. Side-by-side
 

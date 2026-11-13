@@ -1,10 +1,10 @@
 # 05 · IaC for the Enterprise: Aldervane Bank
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](../disclaimer.md)
 
-> **Story hook:** Aldervane's first cloud attempt in 2023 was a "big bang" Terraform root module written by a consultancy: 4,000 lines, one state file, applied from a laptop. An internal audit finding read: *"Infrastructure changes are not subject to the bank's change management process."* This chapter describes the rebuild.
+> **Scenario:** Aldervane's first cloud attempt in 2023 was a "big bang" Terraform root module written by a consultancy: 4,000 lines, one state file, applied from a laptop. An internal audit finding read: *"Infrastructure changes are not subject to the bank's change management process."* This chapter describes the rebuild.
 
-Code: [`iac/enterprise/`](../../iac/enterprise/)
+Code: [`iac/enterprise/`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/tree/main/iac/enterprise)
 
 ## 1. What makes enterprise IaC different
 
@@ -52,17 +52,17 @@ flowchart TB
 
 | Module | Purpose | Key compliance feature |
 |---|---|---|
-| [`org-policies`](../../iac/enterprise/modules/org-policies/main.tf) | Guardrails | EU/CA locations, no SA keys, CMEK required, service allow-list |
-| [`project-factory`](../../iac/enterprise/modules/project-factory/main.tf) | The only way to create projects | Mandatory labels incl. `demand_id`, essential contacts, budgets, deletion protection |
-| [`cmek`](../../iac/enterprise/modules/cmek/main.tf) | Key rings and keys in central KMS projects | HSM, rotation, `destroy_scheduled_duration` = crypto-shred delay |
-| [`audit-logging`](../../iac/enterprise/modules/audit-logging/main.tf) | Org sinks → locked bucket + WORM archive | 5-year queryable, 10-year archive, data-access logs on |
-| [`vpc-sc-perimeter`](../../iac/enterprise/modules/vpc-sc-perimeter/main.tf) | Exfiltration control | Dry-run first, then enforce via CAB |
-| [`shared-vpc`](../../iac/enterprise/modules/shared-vpc/main.tf) | Network hub | No internet route, restricted VIP only, flow logs |
-| [`data-governance`](../../iac/enterprise/modules/data-governance/main.tf) | Dataplex + SDP + policy tags | RoPA aspect, masking, PII discovery, data quality |
+| [`org-policies`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/org-policies/main.tf) | Guardrails | EU/CA locations, no SA keys, CMEK required, service allow-list |
+| [`project-factory`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/project-factory/main.tf) | The only way to create projects | Mandatory labels incl. `demand_id`, essential contacts, budgets, deletion protection |
+| [`cmek`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/cmek/main.tf) | Key rings and keys in central KMS projects | HSM, rotation, `destroy_scheduled_duration` = crypto-shred delay |
+| [`audit-logging`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/audit-logging/main.tf) | Org sinks → locked bucket + WORM archive | 5-year queryable, 10-year archive, data-access logs on |
+| [`vpc-sc-perimeter`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/vpc-sc-perimeter/main.tf) | Exfiltration control | Dry-run first, then enforce via CAB |
+| [`shared-vpc`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/shared-vpc/main.tf) | Network hub | No internet route, restricted VIP only, flow logs |
+| [`data-governance`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/data-governance/main.tf) | Dataplex + SDP + policy tags | RoPA aspect, masking, PII discovery, data quality |
 
 ## 5. Change management
 
-Full detail is in [`change-management/README.md`](../../iac/enterprise/change-management/README.md). In short:
+Full detail is in [`change-management/README.md`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/change-management/README.md). In short:
 
 ```mermaid
 flowchart LR
@@ -84,7 +84,7 @@ flowchart LR
 
 ## 6. Demand management
 
-Full detail is in [`demand-management/README.md`](../../iac/enterprise/demand-management/README.md). The project factory **refuses** to create a project without a `demand_id` that matches `dmd-NNNN`, and the org-wide `gcp.restrictServiceUsage` allow-list is generated from `approved-services.yaml`, where every entry references a security assessment. Using a new Google service therefore requires a demand.
+Full detail is in [`demand-management/README.md`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/demand-management/README.md). The project factory **refuses** to create a project without a `demand_id` that matches `dmd-NNNN`, and the org-wide `gcp.restrictServiceUsage` allow-list is generated from `approved-services.yaml`, where every entry references a security assessment. Using a new Google service therefore requires a demand.
 
 ## 7. Technical debt: visible, owned, expiring
 
@@ -95,7 +95,7 @@ flowchart LR
     CI --> ARB["Monthly ARB review"]
 ```
 
-Patterns demonstrated in [`landing-zone/tech-debt.tf`](../../iac/enterprise/landing-zone/tech-debt.tf):
+Patterns demonstrated in [`landing-zone/tech-debt.tf`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/landing-zone/tech-debt.tf):
 
 | Pattern | Example |
 |---|---|

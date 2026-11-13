@@ -1,8 +1,8 @@
 # 02 · Problem Statement: Project Sentinel
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](disclaimer.md)
 
-> **Story hook:** In Q3, Aldervane Bank lost **€11.4M to authorised push payment (APP) fraud** after SEPA Instant became mandatory. Their nightly batch fraud engine flags fraud *the morning after*, and with instant payments the money is gone in 10 seconds. Down the road, Quillpay has the same problem at a smaller scale, and its investors want proof that it can pass a regulator's audit before the next funding round.
+> **Scenario:** In Q3, Aldervane Bank lost **€11.4M to authorised push payment (APP) fraud** after SEPA Instant became mandatory. Their nightly batch fraud engine flags fraud *the morning after*, and with instant payments the money is gone in 10 seconds. Down the road, Quillpay has the same problem at a smaller scale, and its investors want proof that it can pass a regulator's audit before the next funding round.
 >
 > Both start **Project Sentinel**.
 
@@ -126,7 +126,7 @@ sequenceDiagram
     Note over KMS,Stores: On 2031-03-31 a scheduler destroys the<br/>"retention" DEK, so all copies become unreadable
 ```
 
-> **Why this is a great learning example:** every architecture in the next four chapters has to solve this *same* puzzle. How easy it is depends on how much of the stack you control, and how much the provider does for you.
+> **Why this drives the architecture:** every design in the following chapters has to solve this *same* puzzle. How easy it is depends on how much of the stack you control, and how much the provider does for you.
 
 ## 6. Logical architecture (technology-neutral)
 

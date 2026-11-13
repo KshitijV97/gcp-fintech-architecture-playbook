@@ -1,0 +1,115 @@
+# Self-hosted GLM on GKE (EU) with vLLM: OpenAI-compatible endpoint for
+# OpenCode and OpenHands. Sovereign fallback when a hosted model is unavailable
+# or not permitted (DORA exit plan, data-residency requirements).
+#
+# Before applying:
+#   - Confirm the model ID, minimum vLLM version, tool-call parser and VRAM
+#     requirements on the zai-org model card (GLM-5.2 is a large MoE; FP8 on one
+#     8-GPU H200 or B200 node is the common baseline).
+#   - Create a GPU node pool (e.g. a3-ultragpu-8g, accelerator nvidia-h200-141gb)
+#     in an EU region where it is available, with reservations or DWS flex-start.
+#   - Store the API key and an HF token (if required) in Secret Manager, synced
+#     to the Kubernetes Secret `glm-secrets`.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: llm
+  labels:
+    jurisdiction: eu
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glm-vllm
+  namespace: llm
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: glm-vllm }
+  template:
+    metadata:
+      labels: { app: glm-vllm }
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-accelerator: nvidia-h200-141gb
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:v0.32.0   # pin; check model card for the minimum version
+          args:
+            - --model=zai-org/GLM-5.2-FP8
+            - --served-model-name=glm-5.2
+            - --tensor-parallel-size=8
+            - --max-model-len=131072
+            - --enable-auto-tool-choice
+            - --tool-call-parser=glm45         # use the parser named on the model card
+            - --api-key=$(VLLM_API_KEY)
+            - --port=8000
+          env:
+            - name: VLLM_API_KEY
+              valueFrom: { secretKeyRef: { name: glm-secrets, key: api-key } }
+            - name: HF_TOKEN
+              valueFrom: { secretKeyRef: { name: glm-secrets, key: hf-token, optional: true } }
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              nvidia.com/gpu: "8"
+          readinessProbe:
+            httpGet: { path: /health, port: 8000 }
+            initialDelaySeconds: 600
+            periodSeconds: 15
+          volumeMounts:
+            - { name: model-cache, mountPath: /root/.cache/huggingface }
+            - { name: dshm, mountPath: /dev/shm }
+      volumes:
+        - name: model-cache
+          persistentVolumeClaim: { claimName: glm-model-cache }
+        - name: dshm
+          emptyDir: { medium: Memory, sizeLimit: 64Gi }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: glm-model-cache
+  namespace: llm
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: premium-rwo
+  resources:
+    requests:
+      storage: 2Ti
+---
+# Internal-only: reachable from Cloud Workstations / VPN, never the internet.
+apiVersion: v1
+kind: Service
+metadata:
+  name: glm-vllm
+  namespace: llm
+  annotations:
+    networking.gke.io/load-balancer-type: "Internal"
+spec:
+  type: LoadBalancer
+  selector: { app: glm-vllm }
+  ports:
+    - port: 443
+      targetPort: 8000
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: glm-vllm-ingress
+  namespace: llm
+spec:
+  podSelector:
+    matchLabels: { app: glm-vllm }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - ipBlock: { cidr: 10.0.0.0/8 }   # internal ranges only
+      ports:
+        - port: 8000

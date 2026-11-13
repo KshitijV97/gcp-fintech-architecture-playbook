@@ -1,0 +1,6 @@
+# Website toolchain (FOSS, MIT-licensed). Pinned for reproducible CI builds.
+# Material for MkDocs is feature-frozen; its successor Zensical reads the same
+# mkdocs.yml. Migration = swap this line and the build command in vercel.json.
+mkdocs==1.6.1
+mkdocs-material==9.8.1
+pymdown-extensions==13.1

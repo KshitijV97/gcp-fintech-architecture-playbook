@@ -1,0 +1,46 @@
+# Copy to .github/workflows/claude-pr-review.yml in the Quillpay repo.
+# Claude reviews every session PR, and responds to "@claude" mentions, using
+# Claude on Vertex AI in the EU. Keyless auth via Workload Identity Federation.
+name: claude-pr-review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write   # OIDC → Google (no keys)
+
+jobs:
+  review:
+    if: >
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}   # needs roles/aiplatform.user only
+
+      - uses: anthropics/claude-code-action@v1
+        env:
+          ANTHROPIC_VERTEX_PROJECT_ID: ${{ steps.auth.outputs.project_id }}
+          CLOUD_ML_REGION: eu
+        with:
+          use_vertex: "true"
+          prompt: |
+            Review this pull request as Quillpay's reviewer. Follow AGENTS.md.
+            Check the Session record is complete, the risk tier matches the paths changed,
+            tests use synthetic data only, and no residency/CMEK/least-privilege rule is broken.
+            For tier-2 changes, also apply the compliance-checker criteria in .claude/agents/.
+            Post findings as inline comments, ranked by severity. Do not approve or merge.

@@ -1,0 +1,43 @@
+// OpenCode configuration (V2 schema) for Quillpay engineers using the
+// self-hosted GLM endpoint instead of, or alongside, Claude Code.
+// OpenCode reads AGENTS.md for project rules automatically.
+// Place at the repo root as opencode.jsonc.
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // provider/model
+  "model": "glm/glm-5.2",
+
+  "providers": {
+    "glm": {
+      "name": "Quillpay self-hosted GLM (GKE, EU)",
+      "env": ["QP_LLM_API_KEY"],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        // Internal load balancer behind IAP / VPN; never exposed publicly.
+        "baseURL": "https://llm.internal.quillpay.example/v1"
+      },
+      "models": {
+        "glm-5.2": { "name": "GLM-5.2 (FP8, vLLM)" }
+      }
+    }
+  },
+
+  // Ordered rules; the last match wins; the default is "ask".
+  // Mirrors the Claude Code permissions in .claude/settings.json.
+  "permissions": [
+    { "action": "shell", "resource": "*", "effect": "ask" },
+    { "action": "shell", "resource": "make test *", "effect": "allow" },
+    { "action": "shell", "resource": "make lint *", "effect": "allow" },
+    { "action": "shell", "resource": "make policy *", "effect": "allow" },
+    { "action": "shell", "resource": "git status *", "effect": "allow" },
+    { "action": "shell", "resource": "git diff *", "effect": "allow" },
+    { "action": "shell", "resource": "terraform apply *", "effect": "deny" },
+    { "action": "shell", "resource": "terraform destroy *", "effect": "deny" },
+    { "action": "shell", "resource": "git push --force *", "effect": "deny" },
+    { "action": "shell", "resource": "curl *", "effect": "deny" },
+    { "action": "edit", "resource": "*", "effect": "allow" },
+    { "action": "edit", "resource": "infra/**", "effect": "ask" },
+    { "action": "edit", "resource": ".claude/**", "effect": "ask" }
+  ]
+}

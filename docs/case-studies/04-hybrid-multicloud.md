@@ -1,6 +1,6 @@
 # Case 4 · Hybrid and Multi-cloud: "The Real World Is Messy"
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](../disclaimer.md)
 
 > 🏦 **Protagonist: Aldervane Bank Group**, the whole group this time. The real picture:
 >

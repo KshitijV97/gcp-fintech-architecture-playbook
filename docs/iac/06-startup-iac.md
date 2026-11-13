@@ -1,10 +1,10 @@
 # 06 · IaC for the Startup: Quillpay
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](../disclaimer.md)
 
-> **Story hook:** Daniel (Quillpay's CTO) has a rule: *"Compliance work we do once, in code, is an investment. Compliance work we do every quarter by hand is a tax."* Quillpay has no CAB and no ARB, just 60 engineers, GitHub, and a Series B due-diligence checklist that includes SOC 2 Type II, ISO 27001, GDPR and, now that it's expanding, PIPEDA.
+> **Scenario:** Daniel (Quillpay's CTO) has a rule: *"Compliance work we do once, in code, is an investment. Compliance work we do every quarter by hand is a tax."* Quillpay has no CAB and no ARB, just 60 engineers, GitHub, and a Series B due-diligence checklist that includes SOC 2 Type II, ISO 27001, GDPR and, now that it's expanding, PIPEDA.
 
-Code: [`iac/startup/`](../../iac/startup/)
+Code: [`iac/startup/`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/tree/main/iac/startup)
 
 ## 1. Principles
 

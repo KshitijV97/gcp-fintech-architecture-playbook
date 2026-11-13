@@ -1,8 +1,8 @@
 # 01 · The Google Cloud Service Catalogue: Managed, Semi-managed, Unmanaged
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](disclaimer.md)
 
-> **Story hook:** Priya, Aldervane Bank's new Head of Cloud Architecture, gets a simple-sounding question from the CIO on her first day: *"Which of these 200 Google services do we actually have to run ourselves?"* This chapter is her answer.
+> **Scenario:** Priya, Aldervane Bank's new Head of Cloud Architecture, gets a simple-sounding question from the CIO on her first day: *"Which of these 200 Google services do we actually have to run ourselves?"* This chapter is her answer.
 
 Classification uses the definitions from [Chapter 00](00-how-to-read.md):
 

@@ -1,8 +1,8 @@
 # 08 · Data Governance: Knowing Where Every Byte of Personal Data Lives
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](disclaimer.md)
 
-> **Story hook:** Three weeks after Sentinel went live, Marta (the DPO) received a regulator's letter about a customer complaint. *"Show us every system that processed this person's data, why, under which legal basis, and for how long you'll keep it."* The answer took **11 days** and four teams. Marta's verdict: *"Erasure and access rights are impossible without a map. Build the map."*
+> **Scenario:** Three weeks after Sentinel went live, Marta (the DPO) received a regulator's letter about a customer complaint. *"Show us every system that processed this person's data, why, under which legal basis, and for how long you'll keep it."* The answer took **11 days** and four teams. Marta's verdict: *"Erasure and access rights are impossible without a map. Build the map."*
 
 ## Does Google Cloud have native data governance?
 
@@ -81,7 +81,7 @@ sequenceDiagram
 
 ## The IaC
 
-[`iac/enterprise/modules/data-governance`](../iac/enterprise/modules/data-governance/main.tf) provisions, per jurisdiction cell:
+[`iac/enterprise/modules/data-governance`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/data-governance/main.tf) provisions, per jurisdiction cell:
 
 1. A **policy-tag taxonomy**: `personal-data` → `direct-identifier`, `quasi-identifier`, `government-id`, `financial`
 2. **Masking policies**: SHA-256 for identifiers, always-null for government IDs (including the Canadian SIN)

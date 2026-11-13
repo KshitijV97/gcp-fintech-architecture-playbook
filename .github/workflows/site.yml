@@ -1,0 +1,123 @@
+# Website CI/CD: docs/ → MkDocs (strict) → Vercel
+#
+#   pull_request  → strict build + preview deployment (URL commented on the PR)
+#   push to main  → strict build + production deployment
+#
+# One-time setup (repository secrets): VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID.
+# Until they exist, the build still runs as a quality gate and deploys are skipped.
+name: site
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  NO_MKDOCS_2_WARNING: "1"
+  PYTHON_VERSION: "3.12"
+  VERCEL_CLI_VERSION: "65.14.0"
+
+jobs:
+  build:
+    name: Build (strict)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # --strict: any broken internal link, anchor or nav entry fails the build.
+      - run: mkdocs build --strict
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site/
+          retention-days: 7
+
+  deploy:
+    name: Deploy to Vercel (${{ github.event_name == 'pull_request' && 'preview' || 'production' }})
+    needs: build
+    # Fork PRs don't get secrets; skip their deploys instead of failing.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'preview' || 'production' }}
+      url: ${{ steps.deploy.outputs.url }}
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_ENV: ${{ github.event_name == 'pull_request' && 'preview' || 'production' }}
+    steps:
+      - name: Check Vercel configuration
+        id: cfg
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "::notice title=Vercel not configured::Add VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID secrets to enable deployments."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.cfg.outputs.ready == 'true'
+        uses: actions/checkout@v4
+
+      - if: steps.cfg.outputs.ready == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - if: steps.cfg.outputs.ready == 'true'
+        run: npm install --global vercel@${{ env.VERCEL_CLI_VERSION }}
+
+      - if: steps.cfg.outputs.ready == 'true'
+        run: vercel pull --yes --environment="$VERCEL_ENV" --token="$VERCEL_TOKEN"
+
+      # Runs installCommand + buildCommand from vercel.json on this runner.
+      - if: steps.cfg.outputs.ready == 'true'
+        run: |
+          if [ "$VERCEL_ENV" = "production" ]; then
+            vercel build --prod --token="$VERCEL_TOKEN"
+          else
+            vercel build --token="$VERCEL_TOKEN"
+          fi
+
+      - if: steps.cfg.outputs.ready == 'true'
+        id: deploy
+        run: |
+          if [ "$VERCEL_ENV" = "production" ]; then
+            url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          else
+            url=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "### 🚀 Deployed ($VERCEL_ENV): $url" >> "$GITHUB_STEP_SUMMARY"
+
+      # One sticky comment per PR, edited in place on every push (no comment spam).
+      # HEAD_SHA is the PR branch commit; GITHUB_SHA on pull_request events is
+      # GitHub's temporary merge commit, which matches nothing on the branch.
+      - if: steps.cfg.outputs.ready == 'true' && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} --repo "${{ github.repository }}" \
+            --edit-last --create-if-none \
+            --body "📖 **Site preview:** $URL  (commit ${HEAD_SHA::7}, updated $(date -u '+%Y-%m-%d %H:%M UTC'))"

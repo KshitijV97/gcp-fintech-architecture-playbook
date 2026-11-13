@@ -26,6 +26,6 @@ commercially, as long as you give **attribution**. That means:
 
 ## Disclaimer
 
-The material is provided for **educational purposes only**. It is **not legal,
+The material is provided as reference architecture, as is. It is **not legal,
 regulatory, compliance or financial advice**. See the
 [Disclaimer section of the README](README.md#disclaimer).

@@ -1,8 +1,8 @@
 # 03 · Compliance Controls Map
 
-> **Story hook:** Marta, Aldervane's Data Protection Officer, has one rule for the cloud team: *"Don't show me architecture diagrams. Show me which control satisfies which article, and where the evidence is."* This chapter is that table.
+> **Scenario:** Marta, Aldervane's Data Protection Officer, has one rule for the cloud team: *"Don't show me architecture diagrams. Show me which control satisfies which article, and where the evidence is."* This chapter is that table.
 
-> ⚖️ This is an educational summary, **not legal advice**. Regulations are paraphrased.
+> ⚖️ Regulations are paraphrased for architectural purposes. **Not legal advice.**
 
 ---
 
@@ -78,7 +78,7 @@ flowchart TB
 
 ## 5. Organisation policies every case study uses
 
-These are enforced in the IaC (see [`iac/enterprise/modules/org-policies`](../iac/enterprise/modules/org-policies/main.tf) and [`iac/startup/bootstrap`](../iac/startup/bootstrap/main.tf)):
+These are enforced in the IaC (see [`iac/enterprise/modules/org-policies`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/enterprise/modules/org-policies/main.tf) and [`iac/startup/bootstrap`](https://github.com/KshitijV97/gcp-fintech-architecture-playbook/blob/main/iac/startup/bootstrap/main.tf)):
 
 | Constraint | Effect |
 |---|---|

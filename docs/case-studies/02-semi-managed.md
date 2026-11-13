@@ -1,6 +1,6 @@
 # Case 2 · Semi-managed: "Open Source Engines, Google-run Control Planes"
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](../disclaimer.md)
 
 > 🏦 **Primary protagonist: Aldervane Bank.** Aldervane's platform team already runs Kubernetes on-prem (OpenShift) and has 40 engineers with Kafka and PostgreSQL skills. The CISO and the DORA programme lead set a clear constraint: *"Whatever we build must be portable. If we have to leave Google in 18 months, we move workloads, not rewrite them."*
 

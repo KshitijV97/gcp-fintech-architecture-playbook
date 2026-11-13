@@ -1,6 +1,6 @@
 # Case 1 · Fully Managed: "Let Google Carry the Pager"
 
-> ⚖️ **Disclaimer:** educational material only. This is **not legal, regulatory, compliance or financial advice**. Regulations are paraphrased and simplified; organisations, people and incidents are fictional. Consult qualified counsel before you rely on any of it. [Full disclaimer](../../README.md#disclaimer)
+> ⚖️ Not legal or compliance advice. Regulations are paraphrased; organisations and people are fictional. [Disclaimer](../disclaimer.md)
 
 > 🚀 **Primary protagonist: Quillpay.** With 60 engineers and no dedicated ops team, CTO Daniel says: *"Every hour we spend patching a server is an hour we don't spend beating fraudsters. If Google can run it, Google runs it."*
 >
