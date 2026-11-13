@@ -204,6 +204,7 @@ mkdocs build --strict   # exactly what CI runs
 | Upgrade MkDocs/Material | `requirements.txt` | Strict build validates it on the PR |
 | Upgrade Mermaid | Replace `docs/assets/javascripts/mermaid.min.js`, update `MERMAID_VERSION` | Check diagrams on the preview URL |
 | Change security headers | `vercel.json` → `headers` | Test on the preview before merging (CSP can break rendering) |
+| Change the link-preview card (LinkedIn, Slack, X) | Replace `docs/assets/social-card.png` (1200×630); tags live in `overrides/main.html` | After deploy, refresh the cache in LinkedIn's Post Inspector |
 | Upgrade the Vercel CLI | `VERCEL_CLI_VERSION` in `site.yml` | Next run uses it |
 | Migrate to Zensical (Material's successor) | Swap the package in `requirements.txt` and the build command in `vercel.json` and `site.yml` | Strict build validates it |
 

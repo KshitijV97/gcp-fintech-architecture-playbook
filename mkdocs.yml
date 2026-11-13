@@ -17,6 +17,7 @@ site_dir: site
 
 theme:
   name: material
+  custom_dir: overrides   # link-preview (Open Graph / Twitter card) metadata
   language: en
   icon:
     logo: material/shield-check-outline

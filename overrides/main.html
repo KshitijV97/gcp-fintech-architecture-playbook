@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{#-
+  Link-preview metadata (Open Graph + Twitter/X card) for LinkedIn, Slack,
+  Teams, X and others. og:image must be an absolute URL, so it is built from
+  site_url in mkdocs.yml. Keep site_url pointing at the production domain.
+-#}
+{% block extrahead %}
+{%- if page %}
+  {%- set og_title = config.site_name if page.is_homepage else (page.meta.title or page.title) ~ " · " ~ config.site_name -%}
+  {%- set og_description = page.meta.description or config.site_description -%}
+  {%- set og_image = config.site_url ~ "assets/social-card.png" -%}
+  <meta property="og:type" content="{{ 'website' if page.is_homepage else 'article' }}">
+  <meta property="og:site_name" content="{{ config.site_name }}">
+  <meta property="og:title" content="{{ og_title | striptags }}">
+  <meta property="og:description" content="{{ og_description | striptags | trim }}">
+  <meta property="og:url" content="{{ page.canonical_url }}">
+  <meta property="og:image" content="{{ og_image }}">
+  <meta property="og:image:secure_url" content="{{ og_image }}">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="GCP Fintech Architecture Playbook: reference architectures for a regulated payment-fraud platform on Google Cloud">
+  <meta property="article:author" content="{{ config.site_author }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ og_title | striptags }}">
+  <meta name="twitter:description" content="{{ og_description | striptags | trim }}">
+  <meta name="twitter:image" content="{{ og_image }}">
+{%- endif %}
+{% endblock %}
