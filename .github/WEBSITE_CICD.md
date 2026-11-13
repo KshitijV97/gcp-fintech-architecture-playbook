@@ -110,7 +110,7 @@ sequenceDiagram
         V-->>J: deployment URL
         J->>J: write URL to job summary + environment URL
         opt pull_request
-            J->>J: gh pr comment "📖 Site preview: <url>"
+            J->>J: gh pr comment --edit-last (one sticky comment, PR head SHA)
         end
     end
 ```
@@ -121,7 +121,7 @@ sequenceDiagram
 | `vercel pull` | Fetches project settings for the target environment |
 | `vercel build` | Runs `pip install -r requirements.txt` and `mkdocs build --strict` (from `vercel.json`) **on the GitHub runner** and produces `.vercel/output` |
 | `vercel deploy --prebuilt` | Uploads the pre-built output. Vercel does no building, so build behaviour is identical to CI |
-| PR comment | Posts the preview URL on the PR |
+| PR comment | Posts the preview URL on the PR as **one sticky comment** edited in place on every push, labelled with the PR head commit (not the temporary merge commit) |
 
 ---
 

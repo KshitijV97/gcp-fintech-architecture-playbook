@@ -109,9 +109,15 @@ jobs:
           echo "url=$url" >> "$GITHUB_OUTPUT"
           echo "### 🚀 Deployed ($VERCEL_ENV): $url" >> "$GITHUB_STEP_SUMMARY"
 
+      # One sticky comment per PR, edited in place on every push (no comment spam).
+      # HEAD_SHA is the PR branch commit; GITHUB_SHA on pull_request events is
+      # GitHub's temporary merge commit, which matches nothing on the branch.
       - if: steps.cfg.outputs.ready == 'true' && github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          URL: ${{ steps.deploy.outputs.url }}
         run: |
           gh pr comment ${{ github.event.pull_request.number }} --repo "${{ github.repository }}" \
-            --body "📖 **Site preview:** ${{ steps.deploy.outputs.url }}  (commit ${GITHUB_SHA::7})"
+            --edit-last --create-if-none \
+            --body "📖 **Site preview:** $URL  (commit ${HEAD_SHA::7}, updated $(date -u '+%Y-%m-%d %H:%M UTC'))"
